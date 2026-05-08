@@ -3,13 +3,14 @@ tools.py - helper functions
 """
 
 from rich import print as rprint
-from requests import Session, exceptions
-
+from requests import Session
+from random import choice
+from weebcentral.constants import USER_AGENTS
 
 ### Loging
 
 def notic(msg):
-    rprint(f"[italic blue] {msg}")
+    rprint(f"[italic blue] [NOTIC] {msg}")
 
 
 def warn(msg):
@@ -21,10 +22,10 @@ def error(msg):
 
 
 def success(msg):
-    rprint(f"[italic green] {msg}")
+    rprint(f"[italic green] [SUCCESS] {msg}")
 
 
-def safe_get_request(session: Session, url: str, params: dict, retries: int = 10):
+def safe_get_request(session: Session, url: str, params: dict = {}, retries: int = 10):
     """
         takes a requests.session and does the get requsts, handles errors and retries if one occures.
         it assumes that headers and other settings are already added to the seassion object
@@ -42,6 +43,7 @@ def safe_get_request(session: Session, url: str, params: dict, retries: int = 10
                 continue
             
             successful_resposne = True
+            break
         
         except Exception as e:
             error(f" [try {retries_count + 1}/{retries_count}] error: {e}")
@@ -93,3 +95,17 @@ def range_parser(r: str, chapter_list: list[dict]):
     else:
         error(f"invalid range {r}")
         exit(1)
+
+def random_headers():
+    return {
+        'User-Agent': choice(USER_AGENTS),
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        # 'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Sec-GPC': '1',
+        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site': 'none',
+        'Sec-Fetch-User': '?1',
+    }
