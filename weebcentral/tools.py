@@ -6,6 +6,10 @@ from rich import print as rprint
 from requests import Session
 from random import choice
 from weebcentral.constants import USER_AGENTS
+import os
+import pathlib
+import zipfile
+
 
 ### Loging
 
@@ -109,3 +113,32 @@ def random_headers():
         'Sec-Fetch-Site': 'none',
         'Sec-Fetch-User': '?1',
     }
+
+def make_cbz(files: list[str], output: str, del_files=False, input_dir=".") -> int:
+    with zipfile.ZipFile(output, "w") as file:
+        for f in files:
+            filepath = os.path.join(input_dir, f)
+            if not pathlib.Path(filepath).exists():
+                error(f"file not found: {f}\n      could not make the cbz file {output}")
+                exit(1)
+
+            file.write(filepath, arcname=f)
+            if del_files:
+                os.remove(filepath)
+
+    return 0
+
+
+def chmkdir(p: str) -> int:
+    pth = pathlib.Path(p)
+    if not pth.exists():
+        os.mkdir(str(pth))
+        os.chdir(str(pth))
+        return 0
+    else:
+        if pth.is_file():
+            error(f"{p} is not a directory")
+            exit(1)
+                  
+        os.chdir(str(pth))
+        return 0

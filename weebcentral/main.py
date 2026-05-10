@@ -1,4 +1,4 @@
-from weebcentral import tools, fetch
+from weebcentral import tools, fetch, download
 from weebcentral.constants import *
 import urllib3
 
@@ -11,7 +11,8 @@ def main():
     chapter_list = fetcher.query_chapters(results[0])
     chapter_urls = fetcher.query_chapter_images(chapter_list[0])
     
-    tools.rprint(chapter_urls)
+    downloader = download.Downloader(True, "socks5h://172.18.192.1:1080")
+    downloader.download_chapter(results[0]["name"], chapter_list[0]["name"], chapter_urls, workers=5, create_cbz=True, remove_files=False)
 
     return 0
 
