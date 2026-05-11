@@ -53,10 +53,9 @@ class Downloader:
                 threads = []
                 threads_urls = {}
                 for url in chapter_images:
-                    threads.append(
-                        executor.submit(self.download, url, True, download_path)
-                    )
-                    threads_urls[executor.submit(self.download, url, True, download_path)] = url
+                    thr = executor.submit(self.download, url, True, download_path)
+                    threads.append(thr)
+                    threads_urls[thr] = url
 
                 for thread in futures.as_completed(threads):
                     if thread.result() != 0:

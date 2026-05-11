@@ -22,7 +22,7 @@ class Fetcher:
                 "https": proxy
             }
         
-    def search(self, query: str) -> list[dict]:
+    def search(self, query: str, offset=0) -> list[dict]:
         """
         output scheme:
             list( --> list of all results
@@ -40,7 +40,6 @@ class Fetcher:
                 ...
             )
         """
-        notic(f"Searching for {query}...")
         params = {
             'author': '',
             'text': query,
@@ -48,6 +47,7 @@ class Fetcher:
             'order': 'Ascending',
             'official': 'Any',
             'display_mode': 'Full Display',
+            'offset': offset
         }
         
         page = safe_get_request(self.session, f'{WEBSITE}/search/data', params=params)
@@ -83,7 +83,6 @@ class Fetcher:
                 "id": manga_id,
             })
 
-        success(f"search is done, found {len(results)} results.")
         return results
     
     def query_chapters(self, manga_info: dict) -> list[dict]:
@@ -102,7 +101,7 @@ class Fetcher:
             )
 
         """
-        notic(f"getting chapter list for {manga_info['name']}")
+
         chap_list = safe_get_request(self.session, f"{WEBSITE}/series/{manga_info['id']}/full-chapter-list")
         chap_list_soup = BeautifulSoup(chap_list.text, "html.parser")
 
@@ -118,7 +117,6 @@ class Fetcher:
 
         reuslts.reverse()
         
-        success(f"Found {len(reuslts)} chapters for {manga_info['name']}")
         return reuslts
     
 
@@ -129,7 +127,6 @@ class Fetcher:
             list( --> list of url's for each page of the chapter, the name of image files are in order by default
             )
         """
-        notic(f"getting image urls for {chapter_info['name']}")
 
         chap_images = safe_get_request(self.session, f"{WEBSITE}/chapters/{chapter_info['id']}/images?is_prev=False&current_page=1&reading_style=long_strip")
         chap_images_soup = BeautifulSoup(chap_images.text, "html.parser")
@@ -138,5 +135,4 @@ class Fetcher:
         for img in chap_images_soup.find("section").find_all("img"):
             image_urls.append(img.get("src"))
         
-        success(f"got the urls for {chapter_info['name']}")
         return image_urls
