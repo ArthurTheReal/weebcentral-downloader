@@ -30,3 +30,5 @@ USER_AGENTS = [
 ]
 
 WEBSITE = "https://weebcentral.com"
+DEFAULT_DOWNLOAD_PATH = "~/Downloads/Weebcentral/"
+DEFAULT_DATABASE_PATH = "~/Documents/weebcentral.db"

@@ -9,12 +9,13 @@ from urllib import parse
 from pathlib import Path
 from concurrent import futures
 from rich.progress import Progress
-
+from weebcentral.constants import DEFAULT_DOWNLOAD_PATH
 
 class Downloader:
-    def __init__(self, disable_tls = False, proxy = None):
+    def __init__(self, disable_tls = False, proxy = None, download_path: str = DEFAULT_DOWNLOAD_PATH):
         self.session = requests.Session()
         self.session.headers = random_headers()
+        self.download_path = download_path
 
         if disable_tls:
             self.session.verify = False
@@ -43,13 +44,13 @@ class Downloader:
         if output_cbz.exists():
             return 3
                 
-        download_path = str(Path(manga_name + "/" + chapter_name))
+        download_path = str(Path(self.download_path + manga_name + "/" + chapter_name))
         os.makedirs(download_path, exist_ok=True)
 
         with Progress() as prog:
             task = prog.add_task(
                 f"[blue bold] Downloading {chapter_name}", total=len(chapter_images))
-            with futures.ThreadPoolExecutor(max_workers=10) as executor:
+            with futures.ThreadPoolExecutor(max_workers=workers) as executor:
                 threads = []
                 threads_urls = {}
                 for url in chapter_images:
@@ -72,5 +73,3 @@ class Downloader:
                 os.path.basename(parse.urlparse(url).path) for url in chapter_images
             ]
             make_cbz(file_names, str(output_cbz), remove_files, input_dir=download_path)
-            
-        os.chdir("../..")
