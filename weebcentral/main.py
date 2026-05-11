@@ -6,16 +6,22 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def main():
-    fetcher = fetch.Fetcher(True, "socks5h://172.18.192.1:1080")
-    # results = fetcher.search("attack on titan")
-    # chapter_list = fetcher.query_chapters(results[0])
-    # chapter_urls = fetcher.query_chapter_images(chapter_list[0])
-    
-    # downloader = download.Downloader(True, "socks5h://172.18.192.1:1080")
-    # downloader.download_chapter(results[0]["name"], chapter_list[0]["name"], chapter_urls, workers=5, create_cbz=True, remove_files=False)
+    # proxy = "socks5h://172.18.192.1:1080"
+    proxy = "socks5h://127.0.0.1:1080"
 
-    database.update_database(fetcher)
-    database.search_local()
+    fetcher = fetch.Fetcher(True, proxy)
+    tools.notic("searching...")
+    results = fetcher.search("attack on titan")
+    tools.notic("getting chapter list...")
+    chapter_list = fetcher.query_chapters(results[0])
+    tools.notic("getting chapter images urls...")
+    chapter_urls = fetcher.query_chapter_images(chapter_list[0])
+    tools.notic("downloading images...")
+    downloader = download.Downloader(True, proxy)
+    downloader.download_chapter(results[0]["name"], chapter_list[0]["name"], chapter_urls, workers=5, create_cbz=True, remove_files=False)
+
+    # database.update_database(fetcher)
+    # database.search_local()
 
     return 0
 

@@ -15,7 +15,7 @@ class Downloader:
     def __init__(self, disable_tls = False, proxy = None, download_path: str = DEFAULT_DOWNLOAD_PATH):
         self.session = requests.Session()
         self.session.headers = random_headers()
-        self.download_path = download_path
+        self.download_path = Path(download_path).expanduser().resolve()
 
         if disable_tls:
             self.session.verify = False
@@ -29,8 +29,8 @@ class Downloader:
     def download(self, url, skip_if_exists = True, outdir="./"):
         res = safe_get_request(self.session, url)
 
-        filename = os.path.join(outdir, os.path.basename(parse.urlparse(url).path))
-        if os.path.exists(filename) and skip_if_exists:
+        filename = Path(outdir) / Path(os.path.basename(parse.urlparse(url).path))
+        if filename.exists() and skip_if_exists:
             return 0
         
         with open(filename, "wb") as file:
@@ -40,11 +40,11 @@ class Downloader:
         return 0
 
     def download_chapter(self, manga_name: str, chapter_name: str, chapter_images: list[str], workers=4, create_cbz=False, remove_files=False) -> int:
-        output_cbz = Path(manga_name + "/" + chapter_name + ".cbz")
+        output_cbz = self.download_path / Path(manga_name) / Path(chapter_name + ".cbz")
         if output_cbz.exists():
             return 3
                 
-        download_path = str(Path(self.download_path + manga_name + "/" + chapter_name))
+        download_path = str(self.download_path / Path(manga_name) / Path(chapter_name))
         os.makedirs(download_path, exist_ok=True)
 
         with Progress() as prog:

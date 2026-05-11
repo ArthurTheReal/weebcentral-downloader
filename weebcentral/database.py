@@ -7,6 +7,7 @@ import os
 import sqlite3
 from pyfzf import FzfPrompt
 
+database_pth = Path(DEFAULT_DATABASE_PATH).expanduser().resolve()
 
 def dump_database_from_servers(fetcher: Fetcher):
     results = []
@@ -32,7 +33,6 @@ def dump_database_from_servers(fetcher: Fetcher):
     return results
 
 def update_database(fetcher):
-    database_pth = Path(DEFAULT_DATABASE_PATH)
     if database_pth.exists():
         os.remove(str(database_pth))
     con = sqlite3.connect(str(database_pth))
@@ -62,7 +62,6 @@ def fetch_local_database(fields: list[str]):
             error(f"{i} is not a valid field of data")
             exit(1)
 
-    database_pth = Path(DEFAULT_DATABASE_PATH)
     if not database_pth.exists():
         error(f"{database_pth} not found, please dump a database from online source first")
         exit(1)
@@ -82,7 +81,13 @@ def search_local(prompt=""):
         names_ids[i[0]] = i[1]
 
     fzf = FzfPrompt()
-    result = fzf.prompt(names, f"--query '{prompt}' --layout=reverse")
+    if prompt == "":
+        result = fzf.prompt(names, "--layout=reverse")
+    else:
+        result = fzf.prompt(names, f"--query '{prompt}' --layout=reverse")
+    
+    if result == []: return 0
+    
     return {
         "name": result[0],
         "id": names_ids[result[0]]
