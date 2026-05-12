@@ -1,33 +1,3 @@
-# from weebcentral import tools, fetch, download, database
-# from weebcentral.constants import *
-# import urllib3
-
-# urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-
-# def main():
-#     # proxy = "socks5h://172.18.192.1:1080"
-#     proxy = "socks5h://127.0.0.1:1080"
-
-#     fetcher = fetch.Fetcher(True, proxy)
-#     tools.notic("searching...")
-#     results = fetcher.search("attack on titan")
-#     tools.notic("getting chapter list...")
-#     chapter_list = fetcher.query_chapters(results[0])
-#     tools.notic("getting chapter images urls...")
-#     chapter_urls = fetcher.query_chapter_images(chapter_list[0])
-#     tools.notic("downloading images...")
-#     downloader = download.Downloader(True, proxy)
-#     downloader.download_chapter(results[0]["name"], chapter_list[0]["name"], chapter_urls, workers=5, create_cbz=True, remove_files=False)
-
-#     # database.update_database(fetcher)
-#     # database.search_local()
-
-#     return 0
-
-# if __name__ == "__main__":
-#     exit(main())
-
 """
 main.py - CLI entrypoint for weebcentral manga downloader
 """
