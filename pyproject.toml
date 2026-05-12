@@ -3,7 +3,7 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "weebcentral downloader"
+name = "weebcentral-downloader"
 version = "0.0.1"
 description = "cli manga downloader"
 readme = "README.md"
