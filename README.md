@@ -11,8 +11,6 @@ A command-line tool for searching and downloading manga from [weebcentral.com](h
 - [Features](#features)
 - [Requirements](#requirements)
 - [Installation](#installation)
-  - [Option 1 — Clone and install with pip](#option-1--clone-and-install-with-pip)
-  - [Option 2 — Download and install the wheel](#option-2--download-and-install-the-wheel)
 - [Usage](#usage)
   - [Basic search and download](#basic-search-and-download)
   - [Local database](#local-database)
@@ -47,8 +45,6 @@ A command-line tool for searching and downloading manga from [weebcentral.com](h
 
 ## Installation
 
-### Option 1 — Clone and install with pip
-
 This is the recommended approach if you want to track the latest commits or contribute.
 
 ```bash
@@ -62,18 +58,9 @@ To install in editable/development mode (changes to the source take effect immed
 ```bash
 pip install -e .
 ```
-
-### Option 2 — Download and install the wheel
-
-If a pre-built wheel is available from the repository's releases page, you can install it directly without cloning:
-
-```bash
-pip install weebcentral_downloader-0.0.1-py3-none-any.whl
-```
-
 ---
 
-After either installation method the `weebcentral-dl` command will be available in your shell:
+After installation, the `weebcentral-dl` command will be available in your shell:
 
 ```bash
 weebcentral-dl --help
