@@ -33,9 +33,8 @@ def dump_database_from_servers(fetcher: Fetcher):
     return results
 
 def update_database(fetcher):
-    if database_pth.exists():
-        os.remove(str(database_pth))
-    con = sqlite3.connect(str(database_pth))
+    temp_db_path = str(database_pth) + ".tmp"
+    con = sqlite3.connect(temp_db_path)
     cur = con.cursor()
     cur.execute(
         "CREATE TABLE manga(name, url, image, year, status, type, author, id, tags)")
@@ -55,6 +54,8 @@ def update_database(fetcher):
 
     con.commit()
     con.close()
+    
+    os.rename(temp_db_path, str(database_pth))
 
 def fetch_local_database(fields: list[str]):
     for i in fields:

@@ -105,19 +105,19 @@ class Fetcher:
         chap_list = safe_get_request(self.session, f"{WEBSITE}/series/{manga_info['id']}/full-chapter-list")
         chap_list_soup = BeautifulSoup(chap_list.text, "html.parser")
 
-        reuslts = []
+        results = []
         for div in chap_list_soup.find_all("div", {"class": "flex items-center"}):
             link = div.find("a").get("href")
             name = div.find("a").find_all("span")[1].find("span").string
-            reuslts.append({
+            results.append({
                 "name": name,
                 "url": link,
                 "id": link.split("/")[-1]
             })
 
-        reuslts.reverse()
+        results.reverse()
         
-        return reuslts
+        return results
     
 
     def query_chapter_images(self, chapter_info: dict) -> list[str]:

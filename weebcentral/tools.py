@@ -42,7 +42,7 @@ def safe_get_request(session: Session, url: str, params: dict = {}, retries: int
             response = session.get(url, params=params)
             
             if response.status_code != 200:
-                error(f" [try {retries_count + 1}/{retries_count}] resposne code error: {response.status_code}")
+                error(f" [try {retries_count + 1}/{retries}] resposne code error: {response.status_code}")
                 retries_count += 1
                 continue
             
@@ -69,8 +69,10 @@ def range_parser(r: str, chapter_list: list[dict]):
         n:m --> download chapters from index n to m
         NUM --> download the chapter with index number of NUM
     """
-    
-    if r.lower() in ["all", "a", "t", "total", None]:
+    if r is None:
+        return chapter_list
+
+    if r.lower() in ["all", "a", "t", "total"]:
         return chapter_list
 
     if r.lower() in ["l", "latest", "last", "new"]:

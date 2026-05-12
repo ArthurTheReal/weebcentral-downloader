@@ -58,14 +58,7 @@ class Downloader:
                     threads.append(thr)
                     threads_urls[thr] = url
 
-                for thread in futures.as_completed(threads):
-                    if thread.result() != 0:
-                        threads.append(
-                            executor.submit(self.download, threads_urls[thread], True, download_path)
-                        )
-                        warn(
-                            f"connection error with code {thread.result()} while downloading images of chapter, retrying...")
-
+                for _ in futures.as_completed(threads):
                     prog.update(task, refresh=True, advance=1)
 
         if create_cbz:
@@ -73,3 +66,5 @@ class Downloader:
                 os.path.basename(parse.urlparse(url).path) for url in chapter_images
             ]
             make_cbz(file_names, str(output_cbz), remove_files, input_dir=download_path)
+        
+        return 0
